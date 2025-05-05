@@ -1,7 +1,7 @@
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from outlier_util import remove_outliers_iqr
-from peb_util import map_label_to_kwh
+from util.outlier_util import remove_outliers_iqr
+from util.peb_util import map_label_to_kwh
 
 
 class ColumnDropper(BaseEstimator, TransformerMixin):
@@ -122,7 +122,14 @@ class CategoryTransformer(BaseEstimator, TransformerMixin):
         if self.columns is not None:
             for col in self.columns:
                 order_by_price = x_copy.groupby(col)['price'].mean().round().sort_values(ascending=False)
-                x_copy[col] = x_copy[col].map(order_by_price.to_dict())
+                price_dict = order_by_price.to_dict()
+                
+                # Rescale to integers from 1 to len(unique values) - Thx to Copilot
+                unique_values = sorted(set(price_dict.values()), reverse=True)
+                scaled_dict = {cat: i+1 for i, cat in enumerate(unique_values)}
+                
+                # Map twice: first to price, then to scaled integer
+                x_copy[col] = x_copy[col].map(price_dict).map(scaled_dict)
         
         return x_copy
     

@@ -1,6 +1,5 @@
-from custom_transformers import *
+from pipeline.custom_transformers import *
 from sklearn.pipeline import Pipeline
-import pandas as pd
 
 TO_DROP_LIST = ['Unnamed: 0', 
                 'id', 
@@ -49,8 +48,6 @@ MEDIAN_REPLACE_LIST = ['facedeCount', 'buildingConstructionYear', 'bedroomCount'
 MODE_REPLACE_LIST = ['buildingCondition', 'subtype', 'kitchenType']
 
 
-df = pd.read_csv('./data/Kangaroo.csv')
-
 cleaning_pipe = Pipeline(steps=[
     ('drop_duplicates', DuplicateDropper(subset=['id'])),
 
@@ -79,7 +76,9 @@ cleaning_pipe = Pipeline(steps=[
     ('convert_to_int', ToIntTransformer()) #Convert columns to int
 ])
 
-cleaned_set = cleaning_pipe.fit_transform(df)
 
-cleaned_set.to_csv('./data/kangaroo-cleaned.csv', index=False)
-print(f"Dataset saved with {cleaned_set.shape[0]} rows and {cleaned_set.shape[1]} columns")
+def prepare(df, path):
+    cleaned_set = cleaning_pipe.fit_transform(df)
+
+    cleaned_set.to_csv(path, index=False)
+    print(f"Dataset saved to {path} with {cleaned_set.shape[0]} rows and {cleaned_set.shape[1]} columns")
