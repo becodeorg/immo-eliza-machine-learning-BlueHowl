@@ -1,5 +1,4 @@
 #Thanks Copilot for this long piece of code 
-
 def remove_outliers_iqr(df, columns, multiplier=1.5, min_thresholds={}):
     """
     Remove outliers from the dataframe using the IQR method.
@@ -15,16 +14,13 @@ def remove_outliers_iqr(df, columns, multiplier=1.5, min_thresholds={}):
     """
     df_clean = df.copy()
     
-    # if min_thresholds is None:
-    #     min_thresholds = {}
-    
     outlier_counts = {}
     total_outliers = 0
     
     for column in columns:
         # Calculate Q1, Q3 and IQR
-        Q1 = df_clean[column].quantile(0.05) #0.15
-        Q3 = df_clean[column].quantile(0.90) #0.85
+        Q1 = df_clean[column].quantile(0.05)
+        Q3 = df_clean[column].quantile(0.90)
         IQR = Q3 - Q1
         
         # Calculate the outlier thresholds
@@ -43,14 +39,5 @@ def remove_outliers_iqr(df, columns, multiplier=1.5, min_thresholds={}):
         
         # Filter out the outliers
         df_clean = df_clean[(df_clean[column] >= lower_bound) & (df_clean[column] <= upper_bound)]
-    
-    # print(f"Total rows before removing outliers: {len(df)}")
-    # print(f"Total rows after removing outliers: {len(df_clean)}")
-    # print(f"Total outliers removed: {len(df) - len(df_clean)}")
-    # print(f"Percentage of data retained: {len(df_clean)/len(df)*100:.1f}%")
-    # print("\nOutliers removed per column:")
-    
-    # for col, count in outlier_counts.items():
-    #     print(f"  {col}: {count} ({count/len(df)*100:.1f}%)")
     
     return df_clean

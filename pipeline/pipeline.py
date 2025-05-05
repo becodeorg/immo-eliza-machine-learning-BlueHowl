@@ -78,6 +78,13 @@ cleaning_pipe = Pipeline(steps=[
 
 
 def prepare(df, path):
+    """
+    Prepares the dataset by applying the cleaning pipeline and saving the cleaned dataset to a specified path.
+    Args:
+        df (pd.DataFrame): The input DataFrame to be cleaned.
+        path (str): The path where the cleaned dataset will be saved.
+    """
+    
     cleaned_set = cleaning_pipe.fit_transform(df)
 
     cleaned_set.to_csv(path, index=False)

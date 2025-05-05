@@ -20,7 +20,7 @@ label_to_kwh_wallonia = {
 }
 
 label_to_kwh_flanders = {
-    "A+": -50,  # Negative scale due to efficiency bonus
+    "A+": -50,
     "A": 75,
     "B": 150,
     "C": 225,
@@ -30,6 +30,10 @@ label_to_kwh_flanders = {
 }
 
 def map_label_to_kwh(row):
+    """
+    Maps the EPC label to kWh based on the region.
+    """
+
     region = row["province"]
     label = row["epcScore"]
     

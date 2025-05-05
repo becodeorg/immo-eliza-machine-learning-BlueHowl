@@ -44,25 +44,25 @@ class NAReplacer(BaseEstimator, TransformerMixin):
         if isinstance(self.column, list):
             # Handle list
             for col in self.column:
-                new_val = self.new_value
-                
-                if self.new_value == 'median': 
-                    new_val = int(x_copy[col].median())
-                elif self.new_value == 'mode':
-                    new_val = x_copy[col].mode()[0]
-
-                x_copy[col] = x_copy[col].fillna(new_val)
+                x_copy = impute(x_copy, col, self.new_value)
         else:  
-            new_val = self.new_value 
-            
-            if self.new_value == 'median':
-                new_val = int(x_copy[self.column].median())
-            elif self.new_value == 'mode':
-                new_val = x_copy[self.column].mode()[0]
-
-            x_copy[self.column] = x_copy[self.column].fillna(new_val)
+            x_copy = impute(x_copy, self.column, self.new_value)
         
         return x_copy
+
+def impute(df, column, new_value):
+    """Helper function to impute missing values in a DataFrame column."""
+    
+    new_val = new_value 
+            
+    if new_value == 'median':
+        new_val = int(df[column].median())
+    elif new_value == 'mode':
+        new_val = df[column].mode()[0]
+
+    df[column] = df[column].fillna(new_val)
+
+    return df
 
 class DuplicateDropper(BaseEstimator, TransformerMixin):
     """Transformer that drops duplicate rows from a DataFrame."""
